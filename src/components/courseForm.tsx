@@ -1,6 +1,8 @@
 import React from 'react';
 
-export interface CourseFormProps {}
+export interface CourseFormProps {
+    history: any;
+}
 
 export interface CourseFormState {
   course: {
@@ -22,6 +24,8 @@ class CourseForm extends React.Component<CourseFormProps, CourseFormState> {
 
     // Call server here
     console.log('submitted');
+
+    this.props.history.replace('/courses');
   };
 
   render() {
