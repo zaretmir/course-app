@@ -1,18 +1,26 @@
 import React from 'react';
-import { getCourses } from '../services/fakeCourseService';
 import Pagination from './pagination';
+import axios from 'axios';
+import { Course } from './../services/fakeCourseService';
 
 export interface CourseListProps {}
 
 export interface CourseListState {
-  courses: any[];
+  courses: Course[];
 }
 
 class CourseList extends React.Component<CourseListProps, CourseListState> {
   state = {
-    courses: getCourses(),
+    courses: [],
     pageSize: 2
   };
+
+  async componentDidMount() {
+    const { data: courses } = await axios.get(
+      'http://my-json-server.typicode.com/zaretmir/mock-rest-server/courses'
+    );
+    this.setState({ courses });
+  }
 
   handlePageChange = (page: number) => {
     console.log(page);
@@ -37,7 +45,7 @@ class CourseList extends React.Component<CourseListProps, CourseListState> {
           </thead>
           <tbody>
             {this.state.courses.map(
-              course =>
+              (course: Course) =>
                 course.isActive && (
                   <tr>
                     <th scope='row'>{course.id}</th>

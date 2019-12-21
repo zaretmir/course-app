@@ -1,7 +1,9 @@
 import React from 'react';
+import axios from 'axios';
+import { Course } from './../services/fakeCourseService';
 
 export interface CourseFormProps {
-    history: any;
+  history: any;
 }
 
 export interface CourseFormState {
@@ -19,11 +21,27 @@ class CourseForm extends React.Component<CourseFormProps, CourseFormState> {
     }
   };
 
-  handleSubmit = (e: any) => {
+  handleSubmit = async (e: any) => {
     e.preventDefault();
 
+    console.log('submitting data (faking it)');
+
     // Call server here
-    console.log('submitted');
+    const course: Course = {
+      id: 24,
+      isActive: true,
+      title: 'Meloinvento',
+      duration: 59,
+      level: 'Intermediate'
+    };
+
+    const { data: addedCourse } = await axios.post(
+      'http://my-json-server.typicode.com/zaretmir/mock-rest-server/courses',
+      course
+    );
+
+    console.log(addedCourse);
+    //-
 
     this.props.history.replace('/courses');
   };
@@ -73,7 +91,9 @@ class CourseForm extends React.Component<CourseFormProps, CourseFormState> {
           <label htmlFor='duration'>Course duration (hours)</label>
           <input type='number' className='form-control' id='duration' />
         </div>
-        <button className='btn btn-primary'>Add</button>
+        <button className='btn btn-primary' onClick={this.handleSubmit}>
+          Add
+        </button>
       </form>
     );
   }
