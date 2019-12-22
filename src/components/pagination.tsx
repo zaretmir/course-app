@@ -3,12 +3,13 @@ import _ from 'lodash';
 
 export interface PaginationProps {
   itemsCount: number;
+  currentPage: number;
   pageSize: number;
   onPageChange: any;
 }
 
 const Pagination: React.SFC<PaginationProps> = props => {
-  const { itemsCount, pageSize } = props;
+  const { itemsCount, currentPage, pageSize, onPageChange } = props;
 
   const pageCount = Math.ceil(itemsCount / pageSize);
   if (pageCount === 1) return null;
@@ -18,23 +19,31 @@ const Pagination: React.SFC<PaginationProps> = props => {
     <nav aria-label='Page navigation example'>
       <ul className='pagination'>
         <li className='page-item'>
-          <a className='page-link' href='#' aria-label='Previous'>
+          <button
+            className='page-link'
+            aria-label='Previous'
+            onClick={() => onPageChange(pages[0])}
+          >
             <span aria-hidden='true'>&laquo;</span>
-          </a>
+          </button>
         </li>
 
         {pages.map(page => (
-          <li key={page} className='page-item'>
-            <a className='page-link' onClick={() => props.onPageChange(page)}>
+          <li key={page} className={page === currentPage ? 'page-item active' : 'page-item'}>
+            <button className='page-link' onClick={() => onPageChange(page)}>
               {page}
-            </a>
+            </button>
           </li>
         ))}
 
         <li className='page-item'>
-          <a className='page-link' href='#' aria-label='Next'>
+          <button
+            className='page-link'
+            aria-label='Next'
+            onClick={() => onPageChange(pages[pages.length - 1])}
+          >
             <span aria-hidden='true'>&raquo;</span>
-          </a>
+          </button>
         </li>
       </ul>
     </nav>

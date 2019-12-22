@@ -2,67 +2,62 @@ import React from 'react';
 import Pagination from './pagination';
 import axios from 'axios';
 import { Course } from './../services/fakeCourseService';
+import { paginate } from './../utils/paginate';
+import { sortItems } from './../utils/sort';
+import CoursesTable from './coursesTable';
 
 export interface CourseListProps {}
 
 export interface CourseListState {
-  courses: Course[];
+  allCourses: Course[];
+  currentPage: number;
+  pageSize: number;
+  sortColumn: { field: string; order: string };
 }
 
 class CourseList extends React.Component<CourseListProps, CourseListState> {
   state = {
-    courses: [],
-    pageSize: 2
+    allCourses: [],
+    currentPage: 1,
+    pageSize: 2,
+    sortColumn: { field: 'title', order: 'asc' }
   };
 
   async componentDidMount() {
     const { data: courses } = await axios.get(
       'http://my-json-server.typicode.com/zaretmir/mock-rest-server/courses'
     );
-    this.setState({ courses });
+    this.setState({ allCourses: courses });
   }
 
   handlePageChange = (page: number) => {
-    console.log(page);
+    this.setState({ currentPage: page });
+  };
+
+  handleSort = (sortColumn: any) => {
+    this.setState({ sortColumn });
   };
 
   render() {
-    const { length: coursesCount } = this.state.courses;
+    const { allCourses, currentPage, pageSize, sortColumn } = this.state;
+    const { length: coursesCount } = allCourses;
 
     if (coursesCount === 0) return <p>No courses found.</p>;
+
+    const sorted = sortItems(allCourses, sortColumn.field, sortColumn.order);
+
+    const courses = paginate(sorted, pageSize, currentPage);
 
     return (
       <React.Fragment>
         <p>Found {coursesCount} courses in the database.</p>
-        <table className='table table-hover'>
-          <thead>
-            <tr>
-              <th scope='col'>ID</th>
-              <th scope='col'>Title</th>
-              <th scope='col'>Level</th>
-              <th scope='col'>Duration</th>
-            </tr>
-          </thead>
-          <tbody>
-            {this.state.courses.map(
-              (course: Course) =>
-                course.isActive && (
-                  <tr>
-                    <th scope='row'>{course.id}</th>
-                    <td>{course.title}</td>
-                    <td>{course.level}</td>
-                    <td>{course.duration}</td>
-                  </tr>
-                )
-            )}
-          </tbody>
-        </table>
+        <CoursesTable courses={courses} sortColumn={sortColumn} onSort={this.handleSort} />
         <Pagination
           itemsCount={coursesCount}
-          pageSize={this.state.pageSize}
+          pageSize={pageSize}
+          currentPage={currentPage}
           onPageChange={this.handlePageChange}
         />
-
         <button className='btn btn-primary'>Add course</button>
       </React.Fragment>
     );

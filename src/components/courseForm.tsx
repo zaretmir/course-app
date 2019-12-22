@@ -7,41 +7,39 @@ export interface CourseFormProps {
 }
 
 export interface CourseFormState {
-  course: {
-    title: string;
-    isActive: boolean;
-  };
+  course: Course;
 }
 
 class CourseForm extends React.Component<CourseFormProps, CourseFormState> {
   state = {
     course: {
-      title: 'Fake title',
+      title: '',
+      duration: 0,
+      level: '',
       isActive: true
     }
+  };
+
+  handleChange = ({ currentTarget: input }: any) => {
+    const course: Course = { ...this.state.course };
+
+    input.type === 'number'
+      ? (course[input.name] = parseInt(input.value))
+      : (course[input.name] = input.value);
+
+    this.setState({ course });
   };
 
   handleSubmit = async (e: any) => {
     e.preventDefault();
 
-    console.log('submitting data (faking it)');
-
     // Call server here
-    const course: Course = {
-      id: 24,
-      isActive: true,
-      title: 'Meloinvento',
-      duration: 59,
-      level: 'Intermediate'
-    };
-
     const { data: addedCourse } = await axios.post(
       'http://my-json-server.typicode.com/zaretmir/mock-rest-server/courses',
-      course
+      this.state.course
     );
 
     console.log(addedCourse);
-    //-
 
     this.props.history.replace('/courses');
   };
@@ -53,6 +51,7 @@ class CourseForm extends React.Component<CourseFormProps, CourseFormState> {
           <input
             value='1'
             name='isActive'
+            onChange={this.handleChange}
             type='checkbox'
             className='form-check-input'
             id='active'
@@ -62,26 +61,38 @@ class CourseForm extends React.Component<CourseFormProps, CourseFormState> {
           </label>
         </div>
         <div className='form-group'>
-          <label htmlFor='instructor'>Example select</label>
-          <select className='form-control' id='instructor'>
-            <option>Pepito Perez</option>
-            <option>Sandra Bullock</option>
-            <option>Ose Díaz</option>
+          <label htmlFor='instructor'>Instructor</label>
+          <select
+            value='YYYYYYYYYYYYYYYY'
+            name='instructor'
+            onChange={this.handleChange}
+            className='form-control'
+            id='instructor'
+          >
+            <option value='instructor 1'>Pepito Perez</option>
+            <option value='instructor 2'>Sandra Bullock</option>
+            <option value='instructor 3'>Ose Díaz</option>
           </select>
         </div>
         <div className='form-group'>
           <label htmlFor='title'>Course Title</label>
           <input
             value={this.state.course.title}
+            name='title'
+            onChange={this.handleChange}
             type='text'
             className='form-control'
             id='title'
-            placeholder='Spring MVC'
           />
         </div>
         <div className='form-group'>
           <label htmlFor='level'>Course level</label>
-          <select className='form-control' id='level'>
+          <select
+            value='XXXXXXXXXXXXX'
+            onChange={this.handleChange}
+            className='form-control'
+            id='level'
+          >
             <option>Basic</option>
             <option>Intermediate</option>
             <option>Advanced</option>
@@ -89,7 +100,14 @@ class CourseForm extends React.Component<CourseFormProps, CourseFormState> {
         </div>
         <div className='form-group'>
           <label htmlFor='duration'>Course duration (hours)</label>
-          <input type='number' className='form-control' id='duration' />
+          <input
+            value={this.state.course.duration}
+            name='duration'
+            onChange={this.handleChange}
+            type='number'
+            className='form-control'
+            id='duration'
+          />
         </div>
         <button className='btn btn-primary' onClick={this.handleSubmit}>
           Add
