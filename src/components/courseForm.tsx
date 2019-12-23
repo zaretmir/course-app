@@ -1,6 +1,9 @@
 import React from 'react';
 import axios from 'axios';
 import { Course } from './../services/fakeCourseService';
+import Input from './input';
+import InputSelect from './inputSelect';
+import { Instructor } from './../services/instructor';
 
 export interface CourseFormProps {
   history: any;
@@ -8,17 +11,28 @@ export interface CourseFormProps {
 
 export interface CourseFormState {
   course: Course;
+  instructors: Instructor[];
 }
 
 class CourseForm extends React.Component<CourseFormProps, CourseFormState> {
   state = {
     course: {
-      title: '',
+      title: 'test',
       duration: 0,
       level: '',
+      instructorId: 0,
       isActive: true
-    }
+    },
+    instructors: []
   };
+
+  async componentDidMount() {
+    const { data: instructors } = await axios.get(
+      'http://localhost:8080/course-catalog/instructor-management/instructors'
+    );
+    console.log('instructors: ', instructors);
+    this.setState({ instructors });
+  }
 
   handleChange = ({ currentTarget: input }: any) => {
     const course: Course = { ...this.state.course };
@@ -26,6 +40,14 @@ class CourseForm extends React.Component<CourseFormProps, CourseFormState> {
     input.type === 'number'
       ? (course[input.name] = parseInt(input.value))
       : (course[input.name] = input.value);
+
+    if (input.type === 'checkbox') {
+      input.checked === true ? (course[input.name] = true) : (course[input.name] = false);
+    }
+
+    if (input.name === 'instructor') {
+      course[input.name] = this.state.instructors.find((i: Instructor) => i.name === input.value);
+    }
 
     this.setState({ course });
   };
@@ -35,7 +57,7 @@ class CourseForm extends React.Component<CourseFormProps, CourseFormState> {
 
     // Call server here
     const { data: addedCourse } = await axios.post(
-      'http://my-json-server.typicode.com/zaretmir/mock-rest-server/courses',
+      'http://localhost:8080/course-catalog/course-management/courses',
       this.state.course
     );
 
@@ -47,68 +69,33 @@ class CourseForm extends React.Component<CourseFormProps, CourseFormState> {
   render() {
     return (
       <form onSubmit={this.handleSubmit}>
-        <div className='form-group form-check'>
-          <input
-            value='1'
-            name='isActive'
-            onChange={this.handleChange}
-            type='checkbox'
-            className='form-check-input'
-            id='active'
-          />
-          <label className='form-check-label' htmlFor='active'>
-            Active
-          </label>
-        </div>
-        <div className='form-group'>
-          <label htmlFor='instructor'>Instructor</label>
-          <select
-            value='YYYYYYYYYYYYYYYY'
-            name='instructor'
-            onChange={this.handleChange}
-            className='form-control'
-            id='instructor'
-          >
-            <option value='instructor 1'>Pepito Perez</option>
-            <option value='instructor 2'>Sandra Bullock</option>
-            <option value='instructor 3'>Ose Díaz</option>
-          </select>
-        </div>
-        <div className='form-group'>
-          <label htmlFor='title'>Course Title</label>
-          <input
-            value={this.state.course.title}
-            name='title'
-            onChange={this.handleChange}
-            type='text'
-            className='form-control'
-            id='title'
-          />
-        </div>
-        <div className='form-group'>
-          <label htmlFor='level'>Course level</label>
-          <select
-            value='XXXXXXXXXXXXX'
-            onChange={this.handleChange}
-            className='form-control'
-            id='level'
-          >
-            <option>Basic</option>
-            <option>Intermediate</option>
-            <option>Advanced</option>
-          </select>
-        </div>
-        <div className='form-group'>
-          <label htmlFor='duration'>Course duration (hours)</label>
-          <input
-            value={this.state.course.duration}
-            name='duration'
-            onChange={this.handleChange}
-            type='number'
-            className='form-control'
-            id='duration'
-          />
-        </div>
+        <Input label='Active' name='isActive' onChange={this.handleChange} type='checkbox' />
+        <InputSelect
+          label='Instructor'
+          name='instructor'
+          options={this.state.instructors.map(({ name }) => name)}
+          onChange={this.handleChange}
+        />
+        <Input
+          label='Course title'
+          name='title'
+          value={this.state.course.title}
+          onChange={this.handleChange}
+          type='text'
+        />
+        <InputSelect
+          label='Course level'
+          name='level'
+          options={['basic', 'intermediate', 'advanced']}
+          onChange={this.handleChange}
+        />
+        <Input
+          label='Course duration (hours)'
+          name='duration'
+          value={this.state.course.duration}
+          onChange={this.handleChange}
+          type='number'
+        />
         <button className='btn btn-primary' onClick={this.handleSubmit}>
           Add
         </button>

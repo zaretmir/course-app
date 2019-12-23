@@ -42,17 +42,14 @@ class CoursesTable extends React.Component<CoursesTableProps, CoursesTableState>
           </tr>
         </thead>
         <tbody>
-          {courses.map(
-            (course: Course) =>
-              course.isActive && (
-                <tr>
-                  <th scope='row'>{course.id}</th>
-                  <td>{course.title}</td>
-                  <td>{course.level}</td>
-                  <td>{course.duration}</td>
-                </tr>
-              )
-          )}
+          {courses.map((course: Course) => (
+            <tr>
+              <th scope='row'>{course.id}</th>
+              <td>{course.title}</td>
+              <td>{course.level}</td>
+              <td>{course.duration}</td>
+            </tr>
+          ))}
         </tbody>
       </table>
     );

@@ -24,9 +24,14 @@ class CourseList extends React.Component<CourseListProps, CourseListState> {
   };
 
   async componentDidMount() {
-    const { data: courses } = await axios.get(
+    /*const { data: courses } = await axios.get(
       'http://my-json-server.typicode.com/zaretmir/mock-rest-server/courses'
+    );*/
+
+    const { data: courses } = await axios.get(
+      'http://localhost:8080/course-catalog/course-management/courses'
     );
+    console.log(courses);
     this.setState({ allCourses: courses });
   }
 

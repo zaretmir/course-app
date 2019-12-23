@@ -5,4 +5,5 @@ export interface Course {
   duration: number | null;
   level: string;
   isActive: boolean;
+  instructorId: number;
 }
