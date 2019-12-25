@@ -1,6 +1,6 @@
 import React from 'react';
-import Table from './common/table';
-import { Course } from './../services/fakeCourseService';
+import Table from './common/sortableTable/table';
+import { Course } from '../domain/course';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileDownload } from '@fortawesome/free-solid-svg-icons';
 

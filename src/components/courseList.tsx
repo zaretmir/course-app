@@ -1,10 +1,11 @@
 import React from 'react';
 import Pagination from './common/pagination';
-import axios from 'axios';
-import { Course } from './../services/fakeCourseService';
+import * as courseService from '../services/courseService';
+import { Course } from '../domain/course';
 import { paginate } from './../utils/paginate';
 import { sortItems } from './../utils/sort';
 import CoursesTable from './coursesTable';
+import InfoBox from './common/infoBox';
 
 export interface CourseListProps {}
 
@@ -19,14 +20,12 @@ class CourseList extends React.Component<CourseListProps, CourseListState> {
   state = {
     allCourses: [],
     currentPage: 1,
-    pageSize: 2,
+    pageSize: 5,
     sortColumn: { field: 'title', order: 'asc' }
   };
 
   async componentDidMount() {
-    const { data: courses } = await axios.get(
-      'http://localhost:8080/course-catalog/course-management/courses'
-    );
+    const { data: courses } = await courseService.getCourses();
     console.log(courses);
     this.setState({ allCourses: courses });
   }
@@ -53,13 +52,13 @@ class CourseList extends React.Component<CourseListProps, CourseListState> {
     const { allCourses, currentPage, pageSize, sortColumn } = this.state;
     const { length: coursesCount } = allCourses;
 
-    if (coursesCount === 0) return <p>No courses found.</p>;
+    if (coursesCount === 0) return <InfoBox message='No courses found.' />;
 
     const courses = this.getPagedData();
 
     return (
       <React.Fragment>
-        <p>Found {coursesCount} courses in the database.</p>
+        <InfoBox message={'Found ' + courses.length + ' courses in the database'} />
         <CoursesTable courses={courses} sortColumn={sortColumn} onSort={this.handleSort} />
         <Pagination
           itemsCount={coursesCount}

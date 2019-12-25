@@ -1,9 +1,10 @@
 import React from 'react';
-import axios from 'axios';
-import { Course } from './../services/fakeCourseService';
+import * as courseService from '../services/courseService'; 
+import * as instructorService from '../services/instructorService';
 import Input from './common/input';
 import InputSelect from './common/inputSelect';
-import { Instructor } from './../services/instructor';
+import { Course } from '../domain/course';
+import { Instructor } from '../domain/instructor';
 
 export interface CourseFormProps {
   history: any;
@@ -17,6 +18,7 @@ export interface CourseFormState {
 class CourseForm extends React.Component<CourseFormProps, CourseFormState> {
   state = {
     course: {
+      id: null,
       title: 'test',
       duration: 0,
       level: '',
@@ -27,10 +29,7 @@ class CourseForm extends React.Component<CourseFormProps, CourseFormState> {
   };
 
   async componentDidMount() {
-    const { data: instructors } = await axios.get(
-      'http://localhost:8080/course-catalog/instructor-management/instructors'
-    );
-    console.log('instructors: ', instructors);
+    const { data: instructors } = await instructorService.getInstructors();
     this.setState({ instructors });
   }
 
@@ -54,23 +53,14 @@ class CourseForm extends React.Component<CourseFormProps, CourseFormState> {
 
   handleSubmit = async (e: any) => {
     e.preventDefault();
-    console.log(this.state.course);
 
-    // Call server here
-    // const { data: addedCourse } = await axios.post(
-    //   'http://localhost:8080/course-catalog/course-management/courses',
-    //   this.state.course
-    // );
     try {
-      await axios.post(
-        'http://localhost:8080/course-catalog/course-management/courses',
-        this.state.course
-      );
+      await courseService.postCourse(this.state.course);
     } catch (ex) {
       if (ex.response && ex.response.status === 400) {
-        alert('La liaste');
-        console.log(ex.response.data.message);
-        console.log(ex.response.data.subErrors);
+        alert('Validation error: one or more fields are not valid');
+        this.props.history.replace('/coursesForm');
+        return;
       }
     }
 

@@ -1,0 +1,4 @@
+{
+  "instructorsEndpoint": "http://localhost:8080/course-catalog/instructor-management/instructors",
+  "coursesEndpoint": "http://localhost:8080/course-catalog/course-management/courses"
+}
