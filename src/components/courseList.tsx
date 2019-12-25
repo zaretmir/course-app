@@ -1,5 +1,5 @@
 import React from 'react';
-import Pagination from './pagination';
+import Pagination from './common/pagination';
 import axios from 'axios';
 import { Course } from './../services/fakeCourseService';
 import { paginate } from './../utils/paginate';
@@ -24,10 +24,6 @@ class CourseList extends React.Component<CourseListProps, CourseListState> {
   };
 
   async componentDidMount() {
-    /*const { data: courses } = await axios.get(
-      'http://my-json-server.typicode.com/zaretmir/mock-rest-server/courses'
-    );*/
-
     const { data: courses } = await axios.get(
       'http://localhost:8080/course-catalog/course-management/courses'
     );
@@ -43,15 +39,23 @@ class CourseList extends React.Component<CourseListProps, CourseListState> {
     this.setState({ sortColumn });
   };
 
+  getPagedData = () => {
+    const { allCourses, currentPage, pageSize, sortColumn } = this.state;
+
+    const sorted = sortItems(allCourses, sortColumn.field, sortColumn.order);
+
+    const courses = paginate(sorted, pageSize, currentPage);
+
+    return courses;
+  };
+
   render() {
     const { allCourses, currentPage, pageSize, sortColumn } = this.state;
     const { length: coursesCount } = allCourses;
 
     if (coursesCount === 0) return <p>No courses found.</p>;
 
-    const sorted = sortItems(allCourses, sortColumn.field, sortColumn.order);
-
-    const courses = paginate(sorted, pageSize, currentPage);
+    const courses = this.getPagedData();
 
     return (
       <React.Fragment>

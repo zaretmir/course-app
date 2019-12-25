@@ -1,5 +1,8 @@
 import React from 'react';
-import { Course } from '../services/fakeCourseService';
+import Table from './common/table';
+import { Course } from './../services/fakeCourseService';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFileDownload } from '@fortawesome/free-solid-svg-icons';
 
 export interface CoursesTableProps {
   courses: Course[];
@@ -9,50 +12,26 @@ export interface CoursesTableProps {
 
 export interface CoursesTableState {}
 
-class CoursesTable extends React.Component<CoursesTableProps, CoursesTableState> {
-  raiseSort = (field: string) => {
-    const sortColumn = { ...this.props.sortColumn };
-
-    if (sortColumn.field === field) {
-      sortColumn.order = sortColumn.order === 'asc' ? 'desc' : 'asc';
-    } else {
-      sortColumn.field = field;
-      sortColumn.order = 'asc';
+class CoursesTable extends React.Component<CoursesTableProps, {}> {
+  columns = [
+    { field: 'id', label: 'ID' },
+    { field: 'title', label: 'Title' },
+    { field: 'level', label: 'Level' },
+    { field: 'duration', label: 'Duration' },
+    {
+      key: 'button',
+      content: () => (
+        <button type='button' className='btn btn-outline-info'>
+          Syllabus <FontAwesomeIcon icon={faFileDownload} />
+        </button>
+      )
     }
-    this.props.onSort(sortColumn);
-  };
+  ];
 
   render() {
-    const { courses } = this.props;
+    const { courses, onSort, sortColumn } = this.props;
 
-    return (
-      <table className='table table-hover'>
-        <thead>
-          <tr>
-            <th scope='col'>ID</th>
-            <th onClick={() => this.raiseSort('title')} scope='col'>
-              Title
-            </th>
-            <th onClick={() => this.raiseSort('level')} scope='col'>
-              Level
-            </th>
-            <th onClick={() => this.raiseSort('duration')} scope='col'>
-              Duration
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {courses.map((course: Course) => (
-            <tr>
-              <th scope='row'>{course.id}</th>
-              <td>{course.title}</td>
-              <td>{course.level}</td>
-              <td>{course.duration}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    );
+    return <Table data={courses} columns={this.columns} onSort={onSort} sortColumn={sortColumn} />;
   }
 }
 

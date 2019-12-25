@@ -1,8 +1,8 @@
 import React from 'react';
 import axios from 'axios';
 import { Course } from './../services/fakeCourseService';
-import Input from './input';
-import InputSelect from './inputSelect';
+import Input from './common/input';
+import InputSelect from './common/inputSelect';
 import { Instructor } from './../services/instructor';
 
 export interface CourseFormProps {
@@ -54,14 +54,25 @@ class CourseForm extends React.Component<CourseFormProps, CourseFormState> {
 
   handleSubmit = async (e: any) => {
     e.preventDefault();
+    console.log(this.state.course);
 
     // Call server here
-    const { data: addedCourse } = await axios.post(
-      'http://localhost:8080/course-catalog/course-management/courses',
-      this.state.course
-    );
-
-    console.log(addedCourse);
+    // const { data: addedCourse } = await axios.post(
+    //   'http://localhost:8080/course-catalog/course-management/courses',
+    //   this.state.course
+    // );
+    try {
+      await axios.post(
+        'http://localhost:8080/course-catalog/course-management/courses',
+        this.state.course
+      );
+    } catch (ex) {
+      if (ex.response && ex.response.status === 400) {
+        alert('La liaste');
+        console.log(ex.response.data.message);
+        console.log(ex.response.data.subErrors);
+      }
+    }
 
     this.props.history.replace('/courses');
   };
@@ -96,6 +107,19 @@ class CourseForm extends React.Component<CourseFormProps, CourseFormState> {
           onChange={this.handleChange}
           type='number'
         />
+        {/* <Input
+          label='Upload syllabus'
+          name='syllabus'
+          value='none'
+          onChange='none'
+          type='file'
+        /> */}
+        <div className='custom-file'>
+          <label className='custom-file-label' htmlFor='customFileLang'>
+            Upload syllabus...
+          </label>
+          <input type='file' className='custom-file-input' id='customFileLang' />
+        </div>
         <button className='btn btn-primary' onClick={this.handleSubmit}>
           Add
         </button>
