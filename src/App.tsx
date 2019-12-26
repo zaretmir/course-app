@@ -6,7 +6,7 @@ import CourseForm from './components/courseForm';
 import Navbar from './components/navbar';
 import Home from './components/home';
 
-const App: React.FC = () => {
+const App: React.SFC = () => {
   return (
     <React.Fragment>
       <Navbar />

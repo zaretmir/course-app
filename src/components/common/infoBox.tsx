@@ -6,7 +6,7 @@ export interface InfoBoxProps {
 
 const InfoBox: React.SFC<InfoBoxProps> = ({ message }) => {
   return (
-    <div className='alert alert-success' role='alert'>
+    <div className='alert alert-danger' role='alert'>
       {message}
     </div>
   );

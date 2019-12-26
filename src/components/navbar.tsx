@@ -5,8 +5,8 @@ import { faGraduationCap } from '@fortawesome/free-solid-svg-icons';
 
 const Navbar: React.SFC<{}> = () => {
   return (
-    <nav className='navbar navbar-expand-lg navbar-dark bg-dark'>
-      <Link className='navbar-brand' to='#'>
+    <nav className='navbar navbar-expand-lg navbar-dark bg-dark mb-5'>
+      <Link className='navbar-brand' to='/'>
         <FontAwesomeIcon icon={faGraduationCap} style={{ color: 'white' }} /> CourseApp
       </Link>
       <button
