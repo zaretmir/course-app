@@ -19,7 +19,7 @@ class CourseForm extends React.Component<CourseFormProps, CourseFormState> {
   state = {
     course: {
       id: null,
-      title: 'test',
+      title: 'Enter course name...',
       duration: 0,
       level: '',
       instructorId: 0,
@@ -34,17 +34,20 @@ class CourseForm extends React.Component<CourseFormProps, CourseFormState> {
   }
 
   parseValue = (input: any) => {
-    if (input.type === 'text') return input.value;
+    console.log('Input type ', input.type);
+    console.log('Input value ', input.value);
     if (input.type === 'number') return +input.value;
     if (input.name === 'isActive') return input.checked;
     if (input.name === 'instructor') {
       return this.state.instructors.find((i: Instructor) => i.name === input.value);
     }
+    return input.value;
   };
 
   handleChange = ({ currentTarget: input }: any) => {
     const course: Course = this.state.course;
     course[input.name] = this.parseValue(input);
+    console.log('Course: ', course);
     this.setState({ course });
   };
 
@@ -56,55 +59,56 @@ class CourseForm extends React.Component<CourseFormProps, CourseFormState> {
     } catch (ex) {
       if (ex.response && ex.response.status === 400) {
         alert('Validation error: one or more fields are not valid');
-        this.props.history.replace('/coursesForm');
         return;
       }
     }
 
-    this.props.history.replace('/courses');
+    this.props.history.push('/courses');
   };
 
   render() {
     const { instructors, course } = this.state;
     return (
-      <form onSubmit={this.handleSubmit}>
-        <Input label='Active' name='isActive' onChange={this.handleChange} type='checkbox' />
-        <InputSelect
-          label='Instructor'
-          name='instructor'
-          options={instructors.map(({ name }) => name)}
-          onChange={this.handleChange}
-        />
-        <Input
-          label='Course title'
-          name='title'
-          value={course.title}
-          onChange={this.handleChange}
-          type='text'
-        />
-        <InputSelect
-          label='Course level'
-          name='level'
-          options={['basic', 'intermediate', 'advanced']}
-          onChange={this.handleChange}
-        />
-        <Input
-          label='Course duration (hours)'
-          name='duration'
-          value={course.duration}
-          onChange={this.handleChange}
-          type='number'
-        />
-        <div className='custom-file'>
-          <label className='custom-file-label' htmlFor='customFileLang'>
-            Upload syllabus...
-          </label>
-          <input type='file' className='custom-file-input' id='customFileLang' />
-        </div>
-        <button className='btn btn-primary mt-2' onClick={this.handleSubmit}>
-          Add
-        </button>
-      </form>
+      <React.Fragment>
+        <form onSubmit={this.handleSubmit} style={{ border: 'border:1px solid black' }}>
+          <Input label='Active' name='isActive' onChange={this.handleChange} type='checkbox' />
+          <InputSelect
+            label='Instructor'
+            name='instructor'
+            options={instructors.map(({ name }) => name)}
+            onChange={this.handleChange}
+          />
+          <Input
+            label='Course title'
+            name='title'
+            value={course.title}
+            onChange={this.handleChange}
+            type='text'
+          />
+          <InputSelect
+            label='Course level'
+            name='level'
+            options={['basic', 'intermediate', 'advanced']}
+            onChange={this.handleChange}
+          />
+          <Input
+            label='Course duration (hours)'
+            name='duration'
+            value={course.duration}
+            onChange={this.handleChange}
+            type='number'
+          />
+          <div className='custom-file'>
+            <label className='custom-file-label' htmlFor='customFileLang'>
+              Upload syllabus...
+            </label>
+            <input type='file' className='custom-file-input' id='customFileLang' />
+          </div>
+          <button className='btn btn-primary mt-2' onClick={this.handleSubmit}>
+            Add
+          </button>
+        </form>
+      </React.Fragment>
     );
   }
 }

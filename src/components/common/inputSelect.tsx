@@ -17,7 +17,7 @@ class InputSelect extends React.Component<InputSelectProps, {}> {
   };
 
   changeSelectedValue = (op: any) => {
-    console.log(op);
+    console.log('Change selected: ', op);
     this.setState({ selectedValue: op });
   };
 

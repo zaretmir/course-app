@@ -21,7 +21,7 @@ class CoursesTable extends React.Component<CoursesTableProps, {}> {
     {
       key: 'button',
       content: () => (
-        <button type='button' className='btn btn-outline-info'>
+        <button type='button' className='btn btn-outline-dark'>
           Syllabus <FontAwesomeIcon icon={faFileDownload} />
         </button>
       )
@@ -31,7 +31,7 @@ class CoursesTable extends React.Component<CoursesTableProps, {}> {
   render() {
     const { courses, onSort, sortColumn } = this.props;
 
-    return <Table data={courses} columns={this.columns} onSort={onSort} sortColumn={sortColumn}/>;
+    return <Table data={courses} columns={this.columns} onSort={onSort} sortColumn={sortColumn} />;
   }
 }
 

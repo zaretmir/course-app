@@ -38,7 +38,7 @@ const Pagination: React.SFC<PaginationProps> = props => {
 
         <li className='page-item'>
           <button
-            className='page-link'
+            className='page-link btn-info'
             aria-label='Next'
             onClick={() => onPageChange(pages[pages.length - 1])}
           >

@@ -6,6 +6,7 @@ import { paginate } from './../utils/paginate';
 import { sortItems } from './../utils/sort';
 import CoursesTable from './coursesTable';
 import InfoBox from './common/infoBox';
+import { Link } from 'react-router-dom';
 
 export interface CourseListProps {}
 
@@ -68,7 +69,9 @@ class CourseList extends React.Component<CourseListProps, CourseListState> {
           currentPage={currentPage}
           onPageChange={this.handlePageChange}
         />
-        <button className='btn btn-primary'>Add course</button>
+        <Link className='btn btn-primary' to='/courses/add'>
+          Add course
+        </Link>
       </React.Fragment>
     );
   }
