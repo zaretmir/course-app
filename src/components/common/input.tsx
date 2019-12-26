@@ -30,7 +30,7 @@ const Input: React.SFC<InputProps> = ({ label, value, name, type, onChange }) =>
     <div className='form-group'>
       <label htmlFor={name}>{label}</label>
       <input
-        value={value}
+        value={''+value}
         name={name}
         onChange={onChange}
         type={type}

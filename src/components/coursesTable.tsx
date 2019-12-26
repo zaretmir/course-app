@@ -31,7 +31,7 @@ class CoursesTable extends React.Component<CoursesTableProps, {}> {
   render() {
     const { courses, onSort, sortColumn } = this.props;
 
-    return <Table data={courses} columns={this.columns} onSort={onSort} sortColumn={sortColumn} />;
+    return <Table data={courses} columns={this.columns} onSort={onSort} sortColumn={sortColumn}/>;
   }
 }
 

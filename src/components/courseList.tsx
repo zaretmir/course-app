@@ -58,7 +58,9 @@ class CourseList extends React.Component<CourseListProps, CourseListState> {
 
     return (
       <React.Fragment>
-        <InfoBox message={'Found ' + courses.length + ' courses in the database'} />
+        <p style={{ textAlign: 'right' }}>
+          {'Showing ' + courses.length + ' courses of a total of ' + coursesCount}
+        </p>
         <CoursesTable courses={courses} sortColumn={sortColumn} onSort={this.handleSort} />
         <Pagination
           itemsCount={coursesCount}

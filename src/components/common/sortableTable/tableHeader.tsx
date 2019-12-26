@@ -30,7 +30,7 @@ class TableHeader extends React.Component<TableHeaderProps, {}> {
   render() {
     const { columns } = this.props;
     return (
-      <thead>
+      <thead className='bg-info'>
         <tr>
           {columns.map(column => (
             <th
